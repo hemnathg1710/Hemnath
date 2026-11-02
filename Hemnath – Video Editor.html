@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hemnath – Video Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ecebf5;--ink:#17163a;--muted:#5d5c80;--card:#ffffff;--line:#cfcde6;
+  --blue:#3b3bf5;--coral:#ff5a3c;--on-blue:#ffffff;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14132b;--ink:#ecebf5;--muted:#a6a5c8;--card:#1e1d3d;--line:#34325f;--blue:#7c7cff;--coral:#ff7a5f;--on-blue:#14132b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14132b;--ink:#ecebf5;--muted:#a6a5c8;--card:#1e1d3d;--line:#34325f;--blue:#7c7cff;--coral:#ff7a5f;--on-blue:#14132b;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.6 "DM Sans",system-ui,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+h1,h2,h3{font-family:"Bricolage Grotesque","DM Sans",system-ui,sans-serif;margin:0;letter-spacing:-.02em;line-height:1}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--coral);outline-offset:3px}
+
+nav{display:flex;justify-content:space-between;align-items:center;padding:22px 0}
+nav b{font:800 20px "Bricolage Grotesque",sans-serif}
+nav a{text-decoration:none;font-weight:500;margin-left:20px}
+nav a:hover{color:var(--blue)}
+
+.hero{padding:48px 0 36px}
+.hero h1{font-size:clamp(64px,17vw,190px);font-weight:800;letter-spacing:-.045em}
+.hero p{max-width:34ch;font-size:clamp(20px,3vw,26px);line-height:1.35;margin:22px 0 0;color:var(--muted)}
+.hero p strong{color:var(--ink);font-weight:500}
+.btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.btn{display:inline-block;padding:14px 24px;border-radius:999px;font-weight:500;text-decoration:none;border:2px solid var(--ink)}
+.btn.fill{background:var(--blue);border-color:var(--blue);color:var(--on-blue)}
+.btn:hover{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+
+section{padding:56px 0}
+h2{font-size:clamp(32px,6vw,52px);font-weight:800;margin-bottom:10px}
+.lede{color:var(--muted);margin:0 0 26px;max-width:52ch}
+
+/* timeline */
+.tl-scroll{overflow-x:auto;padding-bottom:6px}
+.tl{position:relative;min-width:680px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 14px 18px}
+.years,.track{display:grid;grid-template-columns:44px repeat(10,1fr);gap:4px;align-items:center}
+.years{font-size:13px;color:var(--muted);margin-bottom:8px}
+.years span{text-align:left}
+.track{margin-top:6px}
+.track>i{font:normal 500 12px "DM Sans";color:var(--muted)}
+.clip{border:0;font:500 14px/1.2 "DM Sans",sans-serif;text-align:left;padding:14px 12px;border-radius:8px;cursor:pointer;color:#fff;min-height:52px}
+.clip small{display:block;font-weight:400;opacity:.85;margin-top:3px}
+.c-film{background:#6a4cff}.c-tv{background:#3b3bf5}.c-wed{background:#d6447a}.c-free{background:#e04a2f}
+.clip[aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:2px}
+.playhead{position:absolute;top:10px;bottom:10px;width:2px;background:var(--coral);left:58px;pointer-events:none;transition:left .06s linear}
+.playhead::before{content:"";position:absolute;top:-4px;left:-5px;border:6px solid transparent;border-top:9px solid var(--coral);border-bottom:0}
+#detail{margin-top:16px;background:var(--card);border:1px solid var(--line);border-left:6px solid var(--blue);border-radius:12px;padding:20px 22px}
+#detail h3{font-size:26px;margin-bottom:6px}
+#detail p{margin:6px 0 0;color:var(--muted)}
+#detail ul{margin:10px 0 0;padding-left:20px}
+
+/* work */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.card.big{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:18px 40px;align-items:flex-end;background:var(--blue);color:var(--on-blue);border-color:var(--blue)}
+.big .num{font:800 clamp(80px,18vw,150px)/.85 "Bricolage Grotesque",sans-serif;letter-spacing:-.05em}
+.card.big p{margin:0;max-width:30ch;font-size:20px;line-height:1.35;color:var(--on-blue)}
+.card h3{font-size:24px;margin-bottom:8px}
+.card p{margin:0;color:var(--muted)}
+.card .stat{font:800 44px "Bricolage Grotesque",sans-serif;color:var(--blue);margin-bottom:6px;letter-spacing:-.03em}
+
+.watch{display:inline-block;margin-top:14px;font-weight:500;color:var(--blue);text-underline-offset:4px}
+.lk{display:block;text-decoration:none}.lk:hover{border-color:var(--blue)}.lk h3{margin-bottom:6px}.lk span{color:var(--blue);font-weight:500}
+.reel{display:none}
+.reel strong{color:var(--ink);font:700 22px "Bricolage Grotesque",sans-serif;display:block;margin-bottom:6px}
+
+.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:28px}
+.skills h3{font-size:20px;margin-bottom:10px}
+.skills ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.skills li{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 14px;font-size:15px}
+
+.contact{background:var(--ink);color:var(--bg);border-radius:22px;padding:clamp(28px,6vw,56px);margin:30px 0 40px}
+.contact h2{font-size:clamp(36px,8vw,76px);margin-bottom:18px}
+.contact a{display:block;font:700 clamp(20px,4.4vw,34px) "Bricolage Grotesque",sans-serif;text-decoration:none;margin-top:8px;overflow-wrap:anywhere}
+.contact a:hover{color:var(--coral)}
+.contact p{margin:18px 0 0;opacity:.75}
+footer{padding:10px 0 40px;color:var(--muted);font-size:14px}
+@media (prefers-reduced-motion:reduce){.playhead{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav><b>Hemnath</b><div><a href="#timeline">Timeline</a><a href="#work">Work</a><a href="#contact">Contact</a></div></nav>
+
+  <header class="hero">
+    <h1>Hemnath</h1>
+    <p><strong>Video editor</strong> with 9 years in television, film and weddings. I edited 92 episodes at Veedu Production for shows aired on Astro TV, and I love a tight deadline.</p>
+    <div class="btns"><a class="btn fill" href="#reel">Watch my work</a><a class="btn" href="#contact">Get in touch</a></div>
+  </header>
+
+  <section id="timeline">
+    <h2>Nine years, one timeline</h2>
+    <p class="lede">Tap a clip to see what I did. Move across the timeline to scrub.</p>
+    <div class="tl-scroll">
+      <div class="tl" id="tl">
+        <div class="years" aria-hidden="true"><span></span><span>2017</span><span>2018</span><span>2019</span><span>2020</span><span>2021</span><span>2022</span><span>2023</span><span>2024</span><span>2025</span><span>2026</span></div>
+        <div class="track"><i>V1</i>
+          <button class="clip c-film" style="grid-column:2/5" data-k="film" aria-pressed="false">Assistant editor<small>Feature film</small></button>
+          <button class="clip c-tv" style="grid-column:5/7" data-k="tv" aria-pressed="false">Senior editor<small>Veedu Production</small></button>
+        </div>
+        <div class="track"><i>V2</i>
+          <button class="clip c-wed" style="grid-column:7/8" data-k="moon" aria-pressed="false">Editor<small>Moonstruck</small></button>
+          <button class="clip c-wed" style="grid-column:8/10" data-k="dlm" aria-pressed="false">Team lead<small>DLM Photography</small></button>
+        </div>
+        <div class="track"><i>V3</i>
+          <button class="clip c-free" style="grid-column:10/12" data-k="free" aria-pressed="false">Freelance<small>Jan 2025 to Sep 2026</small></button>
+        </div>
+        <div class="playhead" id="ph"></div>
+      </div>
+    </div>
+    <div id="detail" aria-live="polite"></div>
+  </section>
+
+  <section id="work">
+    <h2>Selected work</h2>
+    <p class="lede">Television first, then film and weddings.</p>
+    <div class="grid">
+      <div class="card big"><div class="num">92</div><p>episodes edited at Veedu Production for two shows aired on Astro TV, 2020 to 2021.</p></div>
+      <div class="card"><div class="stat">80</div><h3>Tamilletchumy</h3><p>TV series aired on Astro TV, edited under Veedu Production. Episode editing, continuity and delivery with the production team.</p><a class="watch" href="https://www.youtube.com/playlist?list=PLbHCz1ldH8abVBKwkSM-jwFl1I-lamdKP" target="_blank" rel="noopener">Watch season 1 on YouTube</a></div>
+      <div class="card"><div class="stat">12</div><h3>PenGirl Rock</h3><p>TV show aired on Astro TV, edited under Veedu Production. Pacing, audio sync and revisions.</p><a class="watch" href="https://youtu.be/pAKdoZ2I0rU" target="_blank" rel="noopener">Watch on YouTube</a></div>
+      <div class="card"><h3>Panchaaksharam (2019)</h3><p>Tamil feature film. Assistant editor on post production, sequence prep and sync.</p><a class="watch" href="https://youtu.be/u68QA3E01IM" target="_blank" rel="noopener">Watch the teaser</a></div>
+      <div class="card"><h3>Tamil School</h3><p>Malaysian Tamil film. Assistant editor supporting the post production workflow.</p></div>
+      <div class="card"><div class="stat">60+</div><h3>Wedding films</h3><p>Candid and traditional films cut for emotion and pace, with music, color and final delivery.</p><a class="watch" href="#reel">See wedding films</a></div>
+    </div>
+  </section>
+
+  <section id="reel">
+    <h2>Watch my work</h2>
+    <p class="lede">Each link opens on YouTube.</p>
+    <div class="grid">
+      <a class="card lk" href="https://www.youtube.com/playlist?list=PLbHCz1ldH8abVBKwkSM-jwFl1I-lamdKP" target="_blank" rel="noopener"><h3>Tamilletchumy, season 1</h3><p>Full playlist, Astro TV series.</p><span>Open playlist</span></a>
+      <a class="card lk" href="https://youtu.be/pAKdoZ2I0rU" target="_blank" rel="noopener"><h3>PenGirl Rock</h3><p>Astro TV show.</p><span>Watch</span></a>
+      <a class="card lk" href="https://youtu.be/u68QA3E01IM" target="_blank" rel="noopener"><h3>Panchaaksharam teaser</h3><p>Tamil feature film, 2019.</p><span>Watch</span></a>
+      <a class="card lk" href="https://youtu.be/4N6ElP13kms" target="_blank" rel="noopener"><h3>Wedding film 1</h3><p>Candid wedding film.</p><span>Watch</span></a>
+      <a class="card lk" href="https://youtu.be/FtYBSZiu960" target="_blank" rel="noopener"><h3>Wedding film 2</h3><p>Candid wedding film.</p><span>Watch</span></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Skills and tools</h2>
+    <div class="skills" style="margin-top:22px">
+      <div><h3>Editing</h3><ul><li>TV episodes</li><li>Film</li><li>Long form</li><li>Multicam</li><li>Storytelling</li><li>Continuity</li><li>Pacing</li></ul></div>
+      <div><h3>Post production</h3><ul><li>Audio sync</li><li>Music editing</li><li>Color correction</li><li>Color grading</li></ul></div>
+      <div><h3>Software</h3><ul><li>Premiere Pro</li><li>Avid Media Composer</li><li>Final Cut Pro</li><li>DaVinci Resolve</li><li>After Effects</li><li>Photoshop</li></ul></div>
+    </div>
+  </section>
+
+  <section id="contact" style="padding-top:20px">
+    <div class="contact">
+      <h2>Have a cut to make?</h2>
+      <a href="mailto:hemnathg1710@gmail.com">hemnathg1710@gmail.com</a>
+      <a href="tel:+917092606470">+91 70926 06470</a>
+      <p>Saidapet, Chennai. Open to television, film and freelance projects.</p>
+    </div>
+  </section>
+  <footer>© 2026 Hemnath. All rights reserved.</footer>
+</div>
+
+<script>
+var D={
+ film:{t:"Assistant video editor, 2017 to 2019",p:"Panchaaksharam (2019) and Tamil School.",l:["Film post production support","Footage organization and sequence preparation","Audio and video synchronization"]},
+ tv:{t:"Senior video editor, Veedu Production, 2020 to 2021",p:"Malaysia. 92 episodes for shows aired on Astro TV.",l:["Tamilletchumy: 80 episodes","PenGirl Rock: 12 episodes","Continuity, revisions and episode delivery"]},
+ moon:{t:"Video editor, Moonstruck, 2022",p:"Karthik Srinivasan.",l:["10+ wedding candid films","20+ traditional films","Music, sync, color correction and delivery"]},
+ dlm:{t:"Senior editor and team lead, DLM Photography, 2023 to 2024",p:"Dream Light Media.",l:["20+ wedding candid films","10+ traditional films","Led workflow, revisions and quality control"]},
+ free:{t:"Freelance video editor, Jan 2025 to Sep 2026",p:"Raw footage to final delivery.",l:["Color correction, basic VFX and exports","Client communication","Multiple projects and delivery schedules"]}
+};
+var det=document.getElementById("detail"),btns=document.querySelectorAll(".clip");
+function show(k){
+  var d=D[k];
+  det.innerHTML="<h3></h3><p></p><ul></ul>";
+  det.querySelector("h3").textContent=d.t;
+  det.querySelector("p").textContent=d.p;
+  var u=det.querySelector("ul");
+  d.l.forEach(function(x){var li=document.createElement("li");li.textContent=x;u.appendChild(li)});
+  btns.forEach(function(b){b.setAttribute("aria-pressed",b.dataset.k===k)});
+}
+btns.forEach(function(b){b.addEventListener("click",function(){show(b.dataset.k)})});
+show("tv");
+var tl=document.getElementById("tl"),ph=document.getElementById("ph");
+tl.addEventListener("pointermove",function(e){
+  var r=tl.getBoundingClientRect(),x=e.clientX-r.left;
+  x=Math.max(58,Math.min(r.width-14,x));ph.style.left=x+"px";
+});
+</script>
+</body>
+</html>
